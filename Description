@@ -1,0 +1,183 @@
+Background — The Konigsberg Bridge Problem ¨
+In the 18th century, in the town of Konigsberg, there were seven bridges that crossed the river Pregel. ¨
+These bridges connected two islands in the river with each other and with opposite banks. The city
+council of Konigsberg and its citizens for a long time considered this problem: ¨ Is it possible to have a
+continuous walk to cross all the seven bridges without recrossing any of them? This problem is known
+as the Konigsberg bridge problem and belongs to the general area of graph problems. Figure 1a shows ¨
+a map of Konigsberg from the 18th century ¨
+1
+, while Figure 1b gives a multigraph representation of the
+Konigsberg problem. ¨
+(a)
+b
+c a d
+(b)
+Figure 1: (a) A city map of Konigsberg from the 18th century with two islands in the river and seven ¨
+bridges, and (b) the Konigsberg bridge problem represented as a multigraph. ¨
+In Figure 1b, a, b, c, and d are vertices that represent corresponding land areas from Figure 1a.
+Every two vertices in the multigraph are joined by a number of edges equal to the number of bridges
+joining the corresponding land areas. Given the multigraph representation of the problem from Figure 1b, the Konigsberg bridge problem can be translated into the problem of determining whether this ¨
+multigraph has a trail or a circuit that contains all its edges; note that such a trail or a circuit can
+start/end at any vertex of the multigraph.
+A multigraph can have several edges with the same end vertices. For example, in Figure 1b, there
+are two edges with end vertices a and b, and two edges with end vertices a and c. Given two vertices
+u and v in a multigraph, a u-v walk is an alternating sequence of its vertices and edges that starts at
+u and ends at v, such that every edge in the sequence joins the vertices immediately preceding and
+following it. For example, these are three example walks in the multigraph shown in Figure 1b:
+1
+Figure 1a is an adapted version of the figure at https://goo.gl/fBfCkK.
+1
+1. a → d → a
+2. a → b → d → c
+3. a → b → a → c → a
+A walk in a multigraph is a trail if it does not contain repeated edges, while a trail that ends at its
+start is a circuit. Hence, a-a walk 1 shown above is not a trail as it traverses the same edge twice, a-c
+walk 2 is an a-c trail but is not a circuit and, finally, a-a walk 3 is an a-a circuit of the multigraph in
+Figure 1b, considering that no two edges in walk 3 are the same.
+A na¨ıve strategy to solve the Konigsberg bridge problem is to construct all possible sequences of ¨
+all the edges of the multigraph, such that in each sequence each edge appears exactly once, and check
+if any such sequence is a trail or a circuit. Three such example sequences of edges are listed below:
+1. b Ð a, a Ð c, c Ð a, b Ð d, d Ð a, a Ð b, c Ð d
+2. d Ð c, c Ð a, a Ð c, d Ð a, a Ð b, b Ð a, b Ð d
+3. a Ð b, b Ð a, a Ð c, c Ð a, a Ð d, d Ð b, c Ð d
+None of the proposed sequences can be used to construct a walk of seven edges, see the ‘Ð’ edges
+starting at the places where walks break. This na¨ıve algorithmic strategy is computationally complex,
+as given a multigraph with n edges, it constructs and checks n! edge sequences. For example, to solve
+the Konigsberg bridge problem this strategy must construct and check ¨ 7! = 5040 edge sequences.
+Though 7! may appear to be a small number, if one runs the same algorithmic strategy on a multigraph
+composed of 60 edges, the number of edge sequences that need to be examined will roughly equal to
+the believed number of atoms in the observable universe.
+The degree of a vertex in a multigraph is the number of edges incident to the vertex, with loops
+counted twice (where an edge and a vertex on that edge are called incident). For example, the degree
+of vertex a in Figure 1b is 5, while the degree of vertex d in Figure 2 is 6. In 1736, Leonhard Euler,
+a Swiss mathematician, demonstrated the negative resolution of the Konigsberg bridge problem. He ¨
+also described two special classes of multigraphs. An Eulerian trail of a multigraph is a trail that
+includes all the edges of the multigraph, while an Eulerian circuit is a circuit that includes all its edges.
+According to Euler, a multigraph with an Eulerian trail is called traversable, whereas a multigraph
+with an Eulerian circuit is called Eulerian. Euler demonstrated that a multigraph is traversable if and
+only if it is connected, that is there exists a walk between any two vertices of the multigraph, and has
+exactly two vertices of odd degree. Finally, a multigraph is Eulerian if and only if it is connected and
+all its vertices are of even degree. As all the vertices of the multigraph in Figure 1b are of odd degree,
+it is neither traversable nor Eulerian and, hence, there exists no continuous walk that crosses all the
+seven bridges without recrossing any of them.
+More Background — The A&A Travel Agency
+b
+c a d e
+f 1
+5
+2 3
+1
+4
+5
+10
+1 2 3
+15 Figure 2: A multigraph representation of a street
+map annotated with scenic values. The numbers
+next to the edges encode the scenic values of the
+corresponding streets.
+Artem and Alistair have decided to start a walking city tours company called A&A; yes, why
+not! To prepare for the launch, they need to
+come up with scenic walking routes in various
+cities. To accomplish this task, they designed
+several algorithms. As input, these algorithms
+take a street map encoded as a multigraph, and
+a starting point for the route, and as output produce a walking route of a high scenic value. A
+vertex in such an input multigraph encodes a
+crossroad in a city map and an edge represents
+a street that joins two crossroads. Each constructed walking route should start and end at the
+same crossroad/vertex and, to prevent boredom,
+2
+should never follow the same street/edge twice. Hence, the desired walking routes are Eulerian circuits! Artem and Alistair also plan to annotate each edge in every multigraph with its scenic value,
+a natural number between 1 and 100 (including 1 and 100) that reflects the importance of the corresponding street based on the perception of its touristic attractiveness, and intend to construct routes of
+high overall scenic values, where the scenic value of a route that takes a sequence of streets with individual scenic values of val1, val2, . . . , valk, is computed as ∑1≤i≤k
+i × vali
+. Such a cost model gives
+preference to routes with high scenic streets at the end. For example, this is a valid walking route for
+the input multigraph in Figure 2:
+a-1->b-4->e-1->f-3->c-1->d-10->f-2->e-5->d-15->d-3->b-2->c-5->a
+Stage 0 – Reading Input Data (5/15 marks)
+Before tackling the more interesting parts of the project, your very first program should access the
+starting point for a route from the command line and a weighted multigraph from stdin, and then
+print out some basic information so that you can be sure you have read the inputs correctly. Your
+program should also ensure that the supplied street map is indeed encoded as an Eulerian multigraph,
+i.e., it contains a walking route of interest. Required output from this stage is the following summary
+(generated for the test1.txt example input file proposed above):
+mac: ass2-soln b < test1.txt
+Stage 0 Output
+--------------
+S0: Map is composed of 6 vertices and 12 edges
+S0: Min. edge value: 1
+S0: Max. edge value: 15
+S0: Total value of edges: 52
+S0: Route starts at "b"
+S0: Number of vertices with odd degree: 0
+S0: Number of vertices with even degree: 6
+S0: Multigraph is Eulerian
+If the input multigraph has exactly two vertices of even degree, the last line of the output should be:
+S0: Multigraph is traversable
+If the multigraph is neither traversable nor Eulerian, the output of Stage 0 must skip the last line. Your
+program should proceed to Stage 1 only if the input multigraph is Eulerian; otherwise, your program
+should terminate by returning EXIT FAILURE.
+Stage 1 – Simple Scenic Route (10/15 marks)
+In 1873, Hierholzer proposed a simple yet effective algorithm for finding Eulerian circuits. Here we
+propose a modified version of the Hierholzer’s algorithm which proceeds as follows:
+• Starting from a given vertex v of an input multigraph, follow a trail of edges until you return to
+v. The fact that this procedure is performed on an Eulerian multigraph with all its vertices of
+even degree (otherwise your program should not reach this stage) ensures that the trail does not
+get stuck at any vertex before reaching vertex v again. The trail obtained in this way is a circuit.
+However, this circuit may not cover all the edges of the input multigraph.
+• If there exists a vertex u that is visited by the currently constructed circuit but has an incident
+edge that is not part of this circuit, construct another trail that starts and ends at vertex u using
+only so far unvisited edges, and join the constructed trail that starts and ends at u with the
+previous circuit. The resulting sequence of edges is again a circuit.
+• Repeat the previous step until all the edges of the multigraph are visited.
+As the above algorithm ignores edge weights, you are asked to implement its enhanced version
+that postpones visits of edges with high scenic values:
+• Starting from a given vertex v, follow a trail of edges until you return to v. At each stage of the
+trail construction procedure, out of unvisited candidate edges, select the next edge to be an edge
+with the lowest scenic value. If several candidate edges have the same scenic value, select an
+edge that leads to a vertex represented by a character with the smallest ASCII code.
+• If there exists a vertex that is visited by the currently constructed circuit but has an incident edge
+that is not part of the circuit, select the first such vertex u in the current circuit and construct
+another trail that start and ends at vertex u using only so far unvisited edges and prioritizing
+the selection of next edges in the trail in the same way as described in the previous step. Once
+constructed, join the circuit that starts and ends at u with the previous circuit.
+4
+• Repeat the previous step until all the edges of the multigraph are visited.
+Required output from this stage is the following summary (for test1.txt example input file):
+Stage 1 Output
+--------------
+S1: b-1->a-5->c-1->d-3->b
+S1: b-2->c-3->f-1->e-2->f-10->d-5->e-4->b-1->a-5->c-1->d-3->b
+S1: b-2->c-3->f-1->e-2->f-10->d-15->d-5->e-4->b-1->a-5->c-1->d-3->b
+S1: Scenic route value is 332
+Starting from vertex b in the multigraph in Figure 2, by repeatedly selecting the next edge with
+the lowest scenic value one constructs circuit b-1->a-5->c-1->d-3->b, refer to the first line of
+summary generated for Stage 1. In this circuit, vertices b, c, and d have incident edges that are not
+included in the circuit. As vertex b is visited first in the current circuit, another circuit that is composed of the so far unvisited edges and starts and ends at vertex b gets constructed (this is circuit
+b-2->c-3->f-1->e-2->f-10->d-5->e-4->b) and inserted in the current circuit at the first occurrence of b, refer to the second line of the summary. Finally, circuit d-15->d gets inserted into the
+resulting circuit at the place of the first occurrence of vertex d (which is the only vertex on the current
+circuit with an incident unvisited edge) to result in the Eulerian circuit shown in the third line of the
+summary. Your program should print to stdout the first ten, every fifth, and the final constructed
+circuit, each circuit gets printed once in the chronological order of construction. Finally, the last line
+of the summary for Stage 1 reports on the overall scenic value of the constructed Eulerian circuit.
+If you need to print a circuit of more than twelve edges, print the first and last six edges joined by
+the “...” string, refer to the sample output files at the FAQ page for the exact formatting.
+Stage 2 – Greedy Scenic Route (15/15 marks)
+Modify the algorithm implemented in Stage 1 to attempt all the possible extensions of the currently
+constructed circuit. The first circuit constructed in Stage 1, that is b-1->a-5->c-1->d-3->b, can be
+extended at four places (the first and last occurrence of vertex b and vertices c and d). At each iteration,
+test all the possible extensions and apply the one that leads to a circuit with the highest overall scenic
+value. For example, the best next extension of b-1->a-5->c-1->d-3->b is the extension at the
+second occurrence of vertex b with the circuit b-2->c-3->f-1->e-2->f-10->d-5->e-4->b, as it
+results in a scenic route of the overall value of 261. Note that every constructed extension of the
+current circuit and the output of your program should obey all the rules described in Stage 1.
+Hence, required output from this stage is the following summary (for test1.txt input file):
+Stage 2 Output
+--------------
+S2: b-1->a-5->c-1->d-3->b
+S2: b-1->a-5->c-1->d-3->b-2->c-3->f-1->e-2->f-10->d-5->e-4->b
+S2: b-1->a-5->c-1->d-3->b-2->c-3->f-1->e-2->f-10->d-15->d-5->e-4->b
+S2: Scenic route value is 420
+If at some iteration your program constructs several circuits with the same overall value, select the
+one that was obtained via an extension of a vertex at the lowest position in the current circuit.
